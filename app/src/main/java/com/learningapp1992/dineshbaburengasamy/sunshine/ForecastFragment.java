@@ -60,7 +60,7 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if(id==R.id.action_refresh){
-            String preferenceValue = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.location_key),"");
+            String preferenceValue = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.location_key),getString(R.string.location_pref_default));
             FetchWeatherTask fetchWeatherTask= new FetchWeatherTask();
             fetchWeatherTask.execute(preferenceValue);
             Log.v(LOG_TAG,"Preference Value: " + preferenceValue);
