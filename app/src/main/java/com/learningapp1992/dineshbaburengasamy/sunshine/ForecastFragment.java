@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -39,6 +40,7 @@ public class ForecastFragment extends Fragment {
 
     private List<String> weatherData;
     private ArrayAdapter<String> listFiller;
+    private static final String LOG_TAG = ForecastFragment.class.getSimpleName();
     public ForecastFragment() {
     }
 
@@ -58,8 +60,10 @@ public class ForecastFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         if(id==R.id.action_refresh){
+            String preferenceValue = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.location_key),"");
             FetchWeatherTask fetchWeatherTask= new FetchWeatherTask();
-            fetchWeatherTask.execute("Chennai,IN");
+            fetchWeatherTask.execute(preferenceValue);
+            Log.v(LOG_TAG,"Preference Value: " + preferenceValue);
             return true;
         }
         return super.onOptionsItemSelected(item);

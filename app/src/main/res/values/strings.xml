@@ -5,6 +5,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="action_refresh" translatabl="false">Refresh</string>
-    <string name="title_activity_detailed">DetailedActivity</string>
+    <string name="action_refresh" translatable="false">Refresh</string>
+    <string name="title_activity_detailed">DetailedActivity</string>\
+    <string name="location_key">location</string>
+    <string name="location_pref_label" translatable="false">Location</string>
+    <string name="location_pref_default" translatable="false">chennai,IN</string>
 </resources>
