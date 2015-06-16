@@ -37,17 +37,17 @@ public class SettingsActivity extends PreferenceActivity implements SharedPrefer
     }
 
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Preference locationPref = findPreference(getString(R.string.location_key    ));
-        //Preference unitsPref = findPreference(getString(R.string.));
+        Preference locationPref = findPreference(getString(R.string.location_key));
+        Preference unitsPref = findPreference(getString(R.string.unit_key));
         prefChanged(sharedPreferences, locationPref, key);
-        //prefChanged(sharedPreferences, unitsPref, key);
+        prefChanged(sharedPreferences, unitsPref, key);
     }
 
     private void prefChanged(SharedPreferences sharedPreferences, Preference pref, String key) {
         if (sharedPreferences instanceof ListPreference) {
             // For list preferences, look up the correct display value in
             // the preference's 'entries' list (since they have separate labels/values).
-            ListPreference listPreference = (ListPreference) sharedPreferences;
+            ListPreference listPreference = (ListPreference) pref;
             int prefIndex = listPreference.findIndexOfValue(key);
             if (prefIndex >= 0) {
                 pref.setSummary(listPreference.getEntries()[prefIndex]);

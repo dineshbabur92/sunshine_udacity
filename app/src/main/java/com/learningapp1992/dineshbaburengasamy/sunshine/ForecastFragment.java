@@ -30,7 +30,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -53,20 +52,31 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater menuInflater){
-        menuInflater.inflate(R.menu.forecastfragment,menu);
+        //menuInflater.inflate(R.menu.forecastfragment,menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        int id = item.getItemId();
-        if(id==R.id.action_refresh){
-            String preferenceValue = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.location_key),getString(R.string.location_pref_default));
-            FetchWeatherTask fetchWeatherTask= new FetchWeatherTask();
-            fetchWeatherTask.execute(preferenceValue);
-            Log.v(LOG_TAG,"Preference Value: " + preferenceValue);
-            return true;
-        }
+       // int id = item.getItemId();
+       // if(id==R.id.action_refresh){
+              //updateWeather();
+        //    return true;
+      //  }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void updateWeather(){
+        String locationValue = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.location_key),getString(R.string.location_pref_default));
+        String unitValue = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString(getString(R.string.unit_key),getString(R.string.unit_pref_default));
+        FetchWeatherTask fetchWeatherTask= new FetchWeatherTask();
+        fetchWeatherTask.execute(locationValue, unitValue);
+        Log.v(LOG_TAG, "locationValue: " + locationValue + ", unitValue: " + unitValue);
+    }
+
+    @Override
+    public void onStart(){
+        updateWeather();
+        super.onStart();
     }
 
     @Override
@@ -84,15 +94,15 @@ public class ForecastFragment extends Fragment {
             weatherData.add("Friday - Foggy- 70/46");
             weatherData.add("Saturday - Sunny - 76/68");
             */
-        String[] weatherData_them={"Today - Sunny - 88/63",
+       /* String[] weatherData_them={"Today - Sunny - 88/63",
                 "Tommorrow - Foggy - 70/46",
                 "Wednesday - Cloudy - 74/63",
                 "Thursday - Rainy - 64/51",
                 "Friday - Foggy- 70/46",
                 "Saturday - Sunny - 76/68"
-        };
-        weatherData=new ArrayList<String>(Arrays.asList(weatherData_them));
-
+        }; */
+        //weatherData=new ArrayList<String>(Arrays.asList(weatherData_them));
+        weatherData=new ArrayList<String>();
         listFiller = new ArrayAdapter<String>(getActivity(),
                 R.layout.list_item_forecast, R.id.list_item_forecast_textview, weatherData);
 
@@ -131,7 +141,7 @@ public class ForecastFragment extends Fragment {
             return (long)Math.round(min) + "/" + (long)Math.round(max);
         }
 
-        public String[] getJsonResultAsList(String inputJsonString, int numDays) throws JSONException{
+        public String[] getJsonResultAsList(String inputJsonString, int numDays, String pref_unit) throws JSONException{
 
 
             final String WEATHER_CONST = "weather";
@@ -176,7 +186,9 @@ public class ForecastFragment extends Fragment {
                 JSONObject dayObject = weatherArray.getJSONObject(i);
 
                 JSONObject tempObject = dayObject.getJSONObject(TEMP_CONST);
-                temperatureValues = getRoundOffTemp(tempObject.getDouble(MIN_CONST), tempObject.getDouble(MAX_CONST));
+                temperatureValues = changeToPreferredUnit(tempObject.getDouble(MIN_CONST), tempObject.getDouble(MAX_CONST), pref_unit);
+                //Double max_temp = changeToPreferredUnit(tempObject.getDouble(MAX_CONST), pref_unit);
+               // temperatureValues = getRoundOffTemp(min_temp, max_temp);
 
                 JSONArray weatherInfoArray = dayObject.getJSONArray(WEATHER_CONST);
                 description = weatherInfoArray.getJSONObject(0).getString(DESC_CONST);
@@ -189,11 +201,24 @@ public class ForecastFragment extends Fragment {
             return jsonResultList;
         }
 
+        private String changeToPreferredUnit(Double min, Double max, String pref_unit) {
+            if(pref_unit.equals(getString(R.string.unit_pref_imperial))){
+                min = (min * 1.8) + 32;
+                max = (max * 1.8) + 32;
+            }
+            else if(!(pref_unit.equals(getString(R.string.unit_pref_default)))){
+                Log.v(LOG_TAG,"Value selected is not in the list, changing it to default");
+            }
+            return getRoundOffTemp(min, max);
+        }
+
         protected String[] doInBackground(String... params) {
 
             if(params.length == 0){
                 return null;
             }
+            Log.v(LOG_TAG, "location: " + params[0]);
+            Log.v(LOG_TAG, "units: " + params[1]);
             HttpURLConnection urlConnection = null;
             BufferedReader br = null;
             String jsonString = null;
@@ -262,7 +287,7 @@ public class ForecastFragment extends Fragment {
             }
 
             try{
-                return getJsonResultAsList(jsonString, numDays);
+                return getJsonResultAsList(jsonString, numDays, params[1]);
 
             }
             catch(JSONException e){

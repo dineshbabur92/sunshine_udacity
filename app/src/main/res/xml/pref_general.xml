@@ -19,13 +19,12 @@
     <!-- NOTE: Hide buttons to simplify the UI. Users can touch outside the dialog to
          dismiss it. -->
     <!-- NOTE: ListPreference's summary should be set to its value by the activity code. -->
-   <!-- <ListPreference
-        android:key="example_list"
-        android:title="@string/pref_title_add_friends_to_messages"
-        android:defaultValue="-1"
-        android:entries="@array/pref_example_list_titles"
-        android:entryValues="@array/pref_example_list_values"
-        android:negativeButtonText="@null"
-        android:positiveButtonText="@null" /> -->
+    <ListPreference
+        android:key="@string/unit_key"
+        android:title="@string/unit_pref_label"
+        android:defaultValue="@string/unit_pref_default"
+        android:entries="@array/unit_pref_array"
+        android:entryValues="@array/unit_pref_array_values"
+        />
 
 </PreferenceScreen>
