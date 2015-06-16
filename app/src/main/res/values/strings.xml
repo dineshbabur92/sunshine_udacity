@@ -12,7 +12,11 @@
     <string name="location_pref_default" translatable="false">chennai,IN</string>
     <string name="unit_key">unit</string>
     <string name="unit_pref_label">Temperature Unit</string>
-    <string name="unit_pref_default">metric</string>
     <string name="unit_pref_metric">metric</string>
     <string name="unit_pref_imperial">imperial</string>
+    <string name="unit_pref_default">@string/unit_pref_metric</string>
+    <string name="unit_pref_metric_label">metric</string>
+    <string name="unit_pref_imperial_label">imperial</string>
+    <string name="action_map_label">View in Map</string>
+    <string name="action_share_label">Share</string>
 </resources>
